@@ -1,0 +1,22 @@
+{
+  "name": "tag-checker",
+  "version": "1.0.0",
+  "description": "Check nesting of tags in markup documents",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andre-lichtsteiner/tag-checker.git"
+  },
+  "author": "Andre Lichtsteiner",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/andre-lichtsteiner/tag-checker/issues"
+  },
+  "homepage": "https://github.com/andre-lichtsteiner/tag-checker#readme",
+  "dependencies": {
+    "jest": "^27.4.5"
+  }
+}

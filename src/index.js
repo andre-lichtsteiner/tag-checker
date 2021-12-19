@@ -29,7 +29,7 @@ function main () {
 
     const parseResult = parseAndCheckText(text)
     const output = formatOutputOfParseResult(parseResult)
-    console.log(output)
+    console.log('Output for example text: '+ output)
 }
 
-// main()
+main()

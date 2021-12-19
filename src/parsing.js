@@ -46,7 +46,7 @@ export function tokenise(text) {
     const endTagRegex = /<\/[A-Z]>/g
 
     const tokens = []
-    const textTokenMembershipBitmap = new Array(text.length).fill(0)
+    const tokenMembershipBitmap = new Array(text.length).fill(0) // This will be updated so that zeroes indicate the character is just text
 
 
     const startTagMatches = [...text.matchAll(startTagRegex)]
@@ -57,19 +57,19 @@ export function tokenise(text) {
         const tagName = matchString.slice(1, -1)
         const token = new TagToken(text, tagMatch.index, matchString.length, tagName, true)
         tokens.push(token)
-        updateBitmapForToken(textTokenMembershipBitmap, tagMatch)
+        updateBitmapForToken(tokenMembershipBitmap, tagMatch)
     }
     for (const tagMatch of endTagMatches) {
         const matchString = tagMatch[0]
         const tagName = matchString.slice(2, -1)
         const token = new TagToken(text, tagMatch.index, matchString.length, tagName, false)
         tokens.push(token)
-        updateBitmapForToken(textTokenMembershipBitmap, tagMatch)
+        updateBitmapForToken(tokenMembershipBitmap, tagMatch)
     }
     
     let textToken = null
-    textTokenMembershipBitmap.push(1) // To end any text token at the end of the string 
-    textTokenMembershipBitmap.forEach((bitmapValue, i) => {
+    tokenMembershipBitmap.push(1) // To end any text token at the end of the string 
+    tokenMembershipBitmap.forEach((bitmapValue, i) => {
         if (!bitmapValue) {
             if (textToken) {
                 // Extend the length of the existing text token
@@ -91,8 +91,8 @@ export function tokenise(text) {
     return tokens
 }
 
-function updateBitmapForToken (textTokenMembershipBitmap, tagMatch) {
+function updateBitmapForToken (tokenMembershipBitmap, tagMatch) {
     // Mark these characters as being members of a token (currently just overwriting)
     const matchLength = tagMatch[0].length
-    textTokenMembershipBitmap.splice(tagMatch.index, matchLength, ...Array(matchLength).fill(1))
+    tokenMembershipBitmap.splice(tagMatch.index, matchLength, ...Array(matchLength).fill(1))
 }

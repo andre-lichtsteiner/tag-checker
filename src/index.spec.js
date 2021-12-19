@@ -1,5 +1,5 @@
 import { formatOutputOfParseResult } from './index'
-import { parseAndCheckText } from './src/parsing'
+import { parseAndCheckText } from './parsing'
 
 test('correctly checks some texts that are invalid', () => {
     const text1 = '<B><C> This should be centred and in boldface, but the tags are wrongly nested </B></C>'

@@ -2,8 +2,10 @@
   "name": "tag-checker",
   "version": "1.0.0",
   "description": "Check nesting of tags in markup documents",
-  "main": "index.js",
+  "main": "src/index.js",
+  "type": "module",
   "scripts": {
+    "start": "node src/index.js",
     "test": "jest"
   },
   "repository": {
@@ -17,6 +19,8 @@
   },
   "homepage": "https://github.com/andre-lichtsteiner/tag-checker#readme",
   "devDependencies": {
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.5",
     "@babel/plugin-transform-modules-commonjs": "^7.16.5",
     "eslint": "^8.5.0",
     "eslint-config-airbnb-base": "^15.0.0",

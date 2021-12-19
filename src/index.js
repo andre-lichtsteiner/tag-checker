@@ -1,4 +1,4 @@
-import { parseAndCheckText } from "./src/parsing"
+import { parseAndCheckText } from "./parsing.js"
 
 /**
  * @param {ParseResult} parseResult 
@@ -30,3 +30,5 @@ function main () {
     const output = formatOutputOfParseResult(parseResult)
     console.log(output)
 }
+
+main()

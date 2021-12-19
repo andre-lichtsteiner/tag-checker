@@ -1,8 +1,10 @@
+import { TagToken, Token, ParseResult, ParseIssue } from './parsingObjectTypes.js'
+
 /**
  * @param {string} text
  */
 export function parseAndCheckText(text) {
-    // Form a tree etc
+    // Form a tree
     const tokens = tokenise(text)
     const nodeTree = {
         parent: null,
@@ -51,22 +53,20 @@ export function tokenise(text) {
     const endTagMatches = [...text.matchAll(endTagRegex)]
 
     for (const tagMatch of startTagMatches) {
-        const tagName = tagMatch[0].slice(1, -1)
-        const matchLength = tagMatch[0].length
-        const token = new TagToken(text, tagMatch.index, matchLength, tagName, true)
+        const matchString = tagMatch[0]
+        const tagName = matchString.slice(1, -1)
+        const token = new TagToken(text, tagMatch.index, matchString.length, tagName, true)
         tokens.push(token)
-        // Mark these characters as being members of a token (currently just overwriting)
-        textTokenMembershipBitmap.splice(tagMatch.index, matchLength, ...Array(matchLength).fill(1))
+        updateBitmapForToken(textTokenMembershipBitmap, tagMatch)
     }
     for (const tagMatch of endTagMatches) {
-        const tagName = tagMatch[0].slice(2, -1)
-        const matchLength = tagMatch[0].length
-        const token = new TagToken(text, tagMatch.index, matchLength, tagName, false)
+        const matchString = tagMatch[0]
+        const tagName = matchString.slice(2, -1)
+        const token = new TagToken(text, tagMatch.index, matchString.length, tagName, false)
         tokens.push(token)
-        // Mark these characters as being members of a token (currently just overwriting)
-        textTokenMembershipBitmap.splice(tagMatch.index, matchLength, ...Array(matchLength).fill(1))
+        updateBitmapForToken(textTokenMembershipBitmap, tagMatch)
     }
-
+    
     let textToken = null
     textTokenMembershipBitmap.push(1) // To end any text token at the end of the string 
     textTokenMembershipBitmap.forEach((bitmapValue, i) => {
@@ -91,36 +91,8 @@ export function tokenise(text) {
     return tokens
 }
 
-class Token {
-    constructor (text, position, length) {
-        this.text = text
-        this.position = position
-        this.length = length
-    }
-}
-
-class TagToken extends Token {
-    constructor (text, position, length, tagName, isOpening) {
-        super(text, position, length)
-        this.tagName = tagName
-        this.isOpening = isOpening ?? false
-    }
-}
-
-class ParseIssue {
-    constructor (expectedTagName, foundTagName) {
-        this.expectedTagName = expectedTagName
-        this.foundTagName = foundTagName
-    }
-}
-
-export class ParseResult {
-    constructor (parseIssue) {
-        if (!parseIssue) {
-            this.parsedSuccessfully = true
-        } else {
-            this.parseIssue = parseIssue
-            this.parsedSuccessfully = false
-        }
-    }
+function updateBitmapForToken (textTokenMembershipBitmap, tagMatch) {
+    // Mark these characters as being members of a token (currently just overwriting)
+    const matchLength = tagMatch[0].length
+    textTokenMembershipBitmap.splice(tagMatch.index, matchLength, ...Array(matchLength).fill(1))
 }

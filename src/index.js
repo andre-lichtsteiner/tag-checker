@@ -20,6 +20,7 @@ export function formatOutputOfParseResult (parseResult) {
 }
 
 function main () {
+    // An example of usage of the functions created
     const text = `
     <H>Hello 
         <B>World</B>
@@ -31,4 +32,4 @@ function main () {
     console.log(output)
 }
 
-main()
+// main()

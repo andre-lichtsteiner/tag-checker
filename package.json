@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/andre-lichtsteiner/tag-checker#readme",
   "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.16.5",
     "eslint": "^8.5.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.3",

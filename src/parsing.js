@@ -3,6 +3,36 @@
  */
 export function parseAndCheckText(text) {
     // Form a tree etc
+    const tokens = tokenise(text)
+    const nodeTree = {
+        parent: null,
+        child: null,
+        token: null
+    }
+    let currentNode = nodeTree
+    for (const token of tokens) {
+        if (token.tagName && token.isOpening) {
+            // Create and join a new node to the tree, and then set that to be where we are in the tree currently
+            const newTag = {
+                parent: currentNode,
+                child: null,
+                token
+            }
+            currentNode.child = newTag
+            currentNode = newTag
+        } else if (token.tagName && !token.isOpening && token.tagName !== currentNode?.token?.tagName) {
+            // Problem: Improperly ending a tag that is not the most recently started one (including if no tag has been started yet)
+            return new ParseResult(new ParseIssue(currentNode?.token?.tagName, token.tagName))
+        } else if (token.tagName && !token.isOpening) {
+            // Go up a node in the tree
+            currentNode = currentNode.parent
+        }
+    }
+    if (currentNode.parent) {
+        // Problem: We haven't returned back to the root, so have not closed the current tag
+        return new ParseResult(new ParseIssue(currentNode?.token?.tagName, null))
+    }
+    return new ParseResult()
 }
 
 /**
@@ -58,13 +88,7 @@ export function tokenise(text) {
     })
     
     tokens.sort((a, b) => a.position - b.position)
-
-    console.log(tokens)
     return tokens
-}
-
-function findMatches (text, regex) {
-    return [...text.matchAll(regex)]
 }
 
 class Token {
@@ -84,9 +108,9 @@ class TagToken extends Token {
 }
 
 class ParseIssue {
-    constructor (expectedTag, foundTag) {
-        this.expectedTag = expectedTag
-        this.foundTag = foundTag
+    constructor (expectedTagName, foundTagName) {
+        this.expectedTagName = expectedTagName
+        this.foundTagName = foundTagName
     }
 }
 

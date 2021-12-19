@@ -67,22 +67,21 @@ export function tokenise(text) {
         updateBitmapForToken(tokenMembershipBitmap, tagMatch)
     }
     
-    let textToken = null
+    // Now extract the plain text token(s), if any
+    let accumulatedTextToken = null
     tokenMembershipBitmap.push(1) // To end any text token at the end of the string 
-    tokenMembershipBitmap.forEach((bitmapValue, i) => {
-        if (!bitmapValue) {
-            if (textToken) {
+    tokenMembershipBitmap.forEach((usedAlready, i) => {
+        if (usedAlready && accumulatedTextToken) {
+            // End the existing text token, as it was before reaching this index
+            tokens.push(accumulatedTextToken)
+            accumulatedTextToken = null
+        } else if (!usedAlready) {
+            if (accumulatedTextToken) {
                 // Extend the length of the existing text token
-                textToken.length++
+                accumulatedTextToken.length++
             } else {
                 // Start a new text token from this position
-                textToken = new Token(text, i, 1)
-            }
-        } else {
-            if (textToken) {
-                // End the existing text token, as it was before reaching this index
-                tokens.push(textToken)
-                textToken = null
+                accumulatedTextToken = new Token(text, i, 1)
             }
         }
     })
